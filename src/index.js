@@ -4,6 +4,7 @@ import Home from "./pages/Home/Home";
 import { createBrowserHistory } from "history";
 import { Route, Router } from "react-router";
 import { MovieDetails } from "./pages/MovieDetails/MovieDetails";
+import "./root.css";
 
 const history = createBrowserHistory();
 
