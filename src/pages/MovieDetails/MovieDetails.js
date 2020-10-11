@@ -14,7 +14,6 @@ export const MovieDetails = ({ match }) => {
     APIService.fetchMovieById(movieId)
       .then((response) => {
         setMovie(response);
-        console.log(response);
       })
       .catch((error) => console.error(error));
     setIsSaved(!!savedMovies.find((entry) => entry.imdbID === movieId));
