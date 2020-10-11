@@ -22,8 +22,7 @@ export default async function customFetch(
     headers.append("enctype", "multipart/form-data");
   }
 
-  const token = "eb47db3e";
-  let queryParams = `?apikey=${token}`;
+  let queryParams = `?apikey=${process.env.REACT_APP_API_KEY}`;
 
   if (params) {
     queryParams = queryParams.concat(`&${params}`);
