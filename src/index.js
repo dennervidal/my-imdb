@@ -11,6 +11,7 @@ const history = createBrowserHistory();
 ReactDOM.render(
   <Router history={history}>
     <Route path="/" component={Home} exact={true} />
+    <Route path="/favoritos" component={Home} exact={true} />
     <Route path="/filme/:id" component={MovieDetails} exact={true} />
   </Router>,
   document.getElementById("root")

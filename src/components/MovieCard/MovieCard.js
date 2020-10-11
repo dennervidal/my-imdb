@@ -12,6 +12,7 @@ import {
 import { useHistory } from "react-router";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import StarIcon from "@material-ui/icons/Star";
+import { getFavoritesOrEmptyArray, setFavorites } from "../../utils/helpers";
 
 const useStyles = makeStyles({
   root: {
@@ -29,17 +30,18 @@ export function MovieCard({
   const classes = useStyles();
   const history = useHistory();
   const [isSaved, setIsSaved] = useState(saved);
-  const savedMovies = JSON.parse(localStorage.getItem("favorites")) || [];
 
   const handleFavorite = () => {
+    const savedMovies = getFavoritesOrEmptyArray();
+
     if (isSaved) {
       const moviesUpdated = savedMovies.filter(
         (entry) => entry.imdbID !== imdbID
       );
-      localStorage.setItem("favorites", JSON.stringify(moviesUpdated));
+      setFavorites(moviesUpdated);
     } else {
       savedMovies.push({ Poster, Title, Type, Year, imdbID });
-      localStorage.setItem("favorites", JSON.stringify(savedMovies));
+      setFavorites(savedMovies);
     }
     setIsSaved(!isSaved);
   };

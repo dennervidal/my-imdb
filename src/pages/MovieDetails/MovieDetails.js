@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { CssBaseline, Typography, Grid, Button } from "@material-ui/core";
 import APIService from "../../utils/APIService";
 import { Appbar } from "../../components/Appbar/Appbar";
+import { getFavoritesOrEmptyArray, setFavorites } from "../../utils/helpers";
 
 export const MovieDetails = ({ match }) => {
   const [movie, setMovie] = useState({});
   const [isSaved, setIsSaved] = useState(false);
-  const savedMovies = JSON.parse(localStorage.getItem("favorites")) || [];
+  const savedMovies = getFavoritesOrEmptyArray();
 
   useEffect(() => {
     const movieId = match.params.id;
@@ -17,17 +18,17 @@ export const MovieDetails = ({ match }) => {
       })
       .catch((error) => console.error(error));
     setIsSaved(!!savedMovies.find((entry) => entry.imdbID === movieId));
-  }, [match]);
+  }, [match]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleFavorite = () => {
     if (isSaved) {
       const moviesUpdated = savedMovies.filter(
         (entry) => entry.imdbID !== movie.imdbID
       );
-      localStorage.setItem("favorites", JSON.stringify(moviesUpdated));
+      setFavorites(moviesUpdated);
     } else {
       savedMovies.push(movie);
-      localStorage.setItem("favorites", JSON.stringify(savedMovies));
+      setFavorites(savedMovies);
     }
     setIsSaved(!isSaved);
   };

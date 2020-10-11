@@ -5,26 +5,40 @@ import { makeStyles } from "@material-ui/core/styles";
 import APIService from "../../utils/APIService";
 import { MovieCard } from "../../components/MovieCard/MovieCard";
 import { Appbar } from "../../components/Appbar/Appbar";
+import { getFavoritesOrEmptyArray } from "../../utils/helpers";
+import { useHistory } from "react-router";
 
-function Home() {
+function Home({ match }) {
   const classes = useStyles();
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
   const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState("");
-  const savedMovies = JSON.parse(localStorage.getItem("favorites")) || [];
+  const [savedMovies, setSavedMovies] = useState(getFavoritesOrEmptyArray());
+  const history = useHistory();
 
   useEffect(() => {
-    APIService.fetchMovies(search, page)
-      .then((response) => {
-        setMovies(response.Search);
-        setPages(Math.ceil(parseInt(response.totalResults) / 10));
-      })
-      .catch((error) => console.error(error));
-  }, [page, search]);
+    if (match.path === "/" || search !== "") {
+      APIService.fetchMovies(search, page)
+        .then((response) => {
+          setMovies(response.Search);
+          setPages(Math.ceil(parseInt(response.totalResults) / 10));
+        })
+        .catch((error) => console.error(error));
+    } else {
+      handleShowFavorites();
+    }
+  }, [page, search, match]);
 
   const handleShowFavorites = () => {
-    setMovies(savedMovies);
+    const updatedMovies = getFavoritesOrEmptyArray();
+    setSavedMovies(updatedMovies);
+    setMovies(updatedMovies);
+  };
+
+  const handleClick = () => {
+    setSearch("");
+    history.push("/favoritos");
   };
 
   return (
@@ -39,11 +53,7 @@ function Home() {
           justifyContent: "center",
         }}
       >
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={handleShowFavorites}
-        >
+        <Button variant="outlined" color="primary" onClick={handleClick}>
           Meus Favoritos
         </Button>
       </div>
